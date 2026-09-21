@@ -1,0 +1,15 @@
+{
+  "name": "tableaux-miniapp",
+  "version": "1.0.0",
+  "description": "Mini App Telegram — boutique de tableaux (Maxence)",
+  "main": "bot.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "grammy": "^1.30.0"
+  }
+}

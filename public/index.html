@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>Atelier — Boutique</title>
+
+<!-- SDK Telegram : indispensable, chargé depuis telegram.org -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- Typographies : Fraunces (identité / titres) + Inter (interface) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    /* Surfaces pilotées par le thème Telegram, avec valeurs de secours */
+    --bg:        var(--tg-theme-bg-color, #ffffff);
+    --surface:   var(--tg-theme-secondary-bg-color, #f3f4f6);
+    --text:      var(--tg-theme-text-color, #14110f);
+    --hint:      var(--tg-theme-hint-color, #8a8580);
+    --link:      var(--tg-theme-link-color, #14110f);
+    --btn:       var(--tg-theme-button-color, #14110f);
+    --btn-text:  var(--tg-theme-button-text-color, #ffffff);
+    --line:      color-mix(in srgb, var(--text) 12%, transparent);
+
+    --safe-top:    env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --nav-h: 60px;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    padding-top: var(--safe-top);
+    /* place pour la barre d'onglets + zone sûre */
+    padding-bottom: calc(var(--nav-h) + var(--safe-bottom));
+    overflow-x: hidden;
+  }
+
+  /* ── Vues ─────────────────────────────────────────────── */
+  .view { display: none; padding: 0 20px; }
+  .view.active { display: block; }
+
+  header.masthead { padding: 28px 0 18px; }
+  .kicker { font-size: 13px; color: var(--hint); letter-spacing: .02em; }
+  .wordmark {
+    font-family: "Fraunces", serif;
+    font-weight: 500;
+    font-size: clamp(30px, 9vw, 40px);
+    line-height: 1.02;
+    margin: 4px 0 0;
+    letter-spacing: -0.01em;
+  }
+  .masthead p { margin: 10px 0 0; max-width: 60ch; color: var(--hint); font-size: 15px; }
+
+  /* ── Galerie de tableaux (colonne éditoriale, pas une grille serrée) ── */
+  .gallery { display: flex; flex-direction: column; gap: 40px; padding-bottom: 24px; }
+  .piece { }
+  .frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .frame .fallback {
+    position: absolute; inset: 0;
+    display: flex; align-items: flex-end; padding: 16px;
+    font-family: "Fraunces", serif; font-size: 22px; color: #fff;
+    background: linear-gradient(150deg, var(--fb, #333), color-mix(in srgb, var(--fb, #333) 55%, #000));
+  }
+
+  /* Cartel de galerie : le vernaculaire du sujet, pas une carte SaaS */
+  .label { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-top: 14px; }
+  .label .title { font-family: "Fraunces", serif; font-size: 21px; font-weight: 500; margin: 0; }
+  .label .meta { color: var(--hint); font-size: 13.5px; margin: 3px 0 0; }
+  .label .price { font-size: 16px; font-weight: 600; white-space: nowrap; }
+  .desc { color: var(--hint); font-size: 14px; margin: 10px 0 0; }
+
+  .add {
+    margin-top: 14px; width: 100%;
+    border: 1px solid var(--text); background: transparent; color: var(--text);
+    font-family: inherit; font-size: 15px; font-weight: 500;
+    padding: 12px; border-radius: 2px; cursor: pointer;
+    transition: background .12s ease, color .12s ease;
+  }
+  .add:active { transform: translateY(1px); }
+  .piece.in-cart .add { background: var(--text); color: var(--bg); }
+
+  .qty { margin-top: 14px; display: none; align-items: center; justify-content: space-between; border: 1px solid var(--text); border-radius: 2px; overflow: hidden; }
+  .piece.in-cart .qty { display: flex; }
+  .piece.in-cart .add { display: none; }
+  .qty button { background: transparent; border: 0; color: var(--text); font-size: 20px; width: 52px; height: 46px; cursor: pointer; }
+  .qty span { font-weight: 600; }
+
+  /* ── Onglet Info ──────────────────────────────────────── */
+  .prose { padding: 24px 0 8px; }
+  .prose h2 { font-family: "Fraunces", serif; font-weight: 500; font-size: 26px; margin: 0 0 8px; }
+  .prose p { color: var(--text); font-size: 15.5px; }
+  .prose .muted { color: var(--hint); }
+  .row-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0; border-top: 1px solid var(--line); font-size: 15px; cursor: pointer;
+  }
+  .row-link:last-child { border-bottom: 1px solid var(--line); }
+  .row-link .chev { color: var(--hint); }
+  .install {
+    margin-top: 24px; width: 100%;
+    background: var(--btn); color: var(--btn-text);
+    border: 0; border-radius: 2px; padding: 15px; font-family: inherit;
+    font-size: 15px; font-weight: 600; cursor: pointer; display: none;
+  }
+  .install.show { display: block; }
+
+  /* ── Barre d'onglets ──────────────────────────────────── */
+  nav.tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    height: calc(var(--nav-h) + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
+    display: flex; background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+  nav.tabs button {
+    flex: 1; background: transparent; border: 0; color: var(--hint);
+    font-family: inherit; font-size: 12px; font-weight: 500; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  }
+  nav.tabs button.active { color: var(--text); }
+  nav.tabs .ic { font-size: 19px; line-height: 1; }
+  nav.tabs .badge {
+    position: absolute; transform: translate(14px, -12px);
+    background: var(--btn); color: var(--btn-text);
+    font-size: 11px; font-weight: 600; min-width: 18px; height: 18px;
+    border-radius: 9px; display: none; align-items: center; justify-content: center; padding: 0 5px;
+  }
+  nav.tabs .badge.show { display: inline-flex; }
+
+  /* ── Feuille de commande (bottom sheet) ───────────────── */
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 30; display: none; }
+  .scrim.show { display: block; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 31;
+    background: var(--bg); border-radius: 16px 16px 0 0;
+    padding: 8px 20px calc(20px + var(--safe-bottom));
+    transform: translateY(100%); transition: transform .25s ease; max-height: 82vh; overflow-y: auto;
+  }
+  .sheet.show { transform: translateY(0); }
+  .grabber { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 8px auto 14px; }
+  .sheet h3 { font-family: "Fraunces", serif; font-weight: 500; font-size: 22px; margin: 0 0 14px; }
+  .cart-line { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .cart-line .n { color: var(--hint); }
+  .total { display: flex; justify-content: space-between; font-weight: 600; font-size: 18px; padding: 16px 0 8px; }
+  .checkout {
+    width: 100%; background: var(--btn); color: var(--btn-text);
+    border: 0; border-radius: 2px; padding: 16px; font-family: inherit;
+    font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px;
+  }
+  .checkout:disabled { opacity: .5; }
+  .empty { text-align: center; color: var(--hint); padding: 30px 0; }
+  .note { color: var(--hint); font-size: 12.5px; text-align: center; margin: 12px 0 0; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- ══ BOUTIQUE ══════════════════════════════════════════ -->
+<section id="boutique" class="view active">
+  <header class="masthead">
+    <div class="kicker">Atelier · œuvres originales</div>
+    <h1 class="wordmark">La boutique</h1>
+    <p>Chaque tableau est une pièce unique. Ajoute ce qui te plaît, je te confirme la commande directement ici.</p>
+  </header>
+  <div class="gallery" id="gallery"><!-- injecté en JS --></div>
+</section>
+
+<!-- ══ INFO ══════════════════════════════════════════════ -->
+<section id="info" class="view">
+  <div class="prose">
+    <h2>À propos</h2>
+    <p>Je peins des pièces uniques, entre abstraction et matière. Chaque œuvre est signée et vendue avec son certificat d'authenticité.</p>
+    <p class="muted">Les originaux sont expédiés assurés sous 5 jours. Les éditions numériques sont livrées par message après paiement.</p>
+
+    <div class="row-link" id="contact"><span>Me contacter</span><span class="chev">›</span></div>
+    <div class="row-link" id="shipping"><span>Livraison &amp; retours</span><span class="chev">›</span></div>
+    <div class="row-link" id="commissions"><span>Commande sur mesure</span><span class="chev">›</span></div>
+
+    <button class="install" id="installBtn">Ajouter à l'écran d'accueil</button>
+    <p class="note" id="installNote"></p>
+  </div>
+</section>
+
+<!-- ══ BARRE D'ONGLETS ═══════════════════════════════════ -->
+<nav class="tabs">
+  <button data-tab="boutique" class="active">
+    <span class="ic">◫</span>Boutique
+    <span class="badge" id="badge"></span>
+  </button>
+  <button data-tab="info"><span class="ic">ⓘ</span>Info</button>
+</nav>
+
+<!-- ══ FEUILLE DE COMMANDE ═══════════════════════════════ -->
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet">
+  <div class="grabber"></div>
+  <h3>Ta commande</h3>
+  <div id="cartLines"></div>
+  <div class="total"><span>Total</span><span id="cartTotal">0 €</span></div>
+  <button class="checkout" id="checkoutBtn">Commander</button>
+  <p class="note">Paiement et livraison confirmés par message après validation.</p>
+</div>
+
+<script>
+// ── Données de secours (aperçu statique / API indisponible) ──
+// La source de vérité des prix reste products.js côté serveur.
+const FALLBACK = [
+  { id:"aurore",  title:"Aurore Fracturée", medium:"Acrylique sur toile", dimensions:"80 × 100 cm", price:450, image:"/tableaux/aurore.jpg",  accent:"#c2410c", description:"Pièce unique. Encadrement inclus, expédition sous 5 jours." },
+  { id:"silence", title:"Silence Urbain",   medium:"Techniques mixtes",   dimensions:"60 × 60 cm",  price:320, image:"/tableaux/silence.jpg", accent:"#334155", description:"Pièce unique. Toile montée sur châssis, prête à accrocher." },
+  { id:"derive",  title:"Dérive",           medium:"Encre et gouache sur papier", dimensions:"50 × 70 cm", price:280, image:"/tableaux/derive.jpg", accent:"#0f766e", description:"Original signé. Livré roulé dans un tube renforcé." },
+  { id:"memoire", title:"Mémoire Vive",     medium:"Impression giclée numérotée", dimensions:"40 × 50 cm", price:120, image:"/tableaux/memoire.jpg", accent:"#7c3aed", description:"Édition limitée. Fichier haute définition livré après paiement." },
+];
+
+const tg = window.Telegram?.WebApp;
+const euro = (n) => n.toLocaleString("fr-FR") + " €";
+let PRODUCTS = FALLBACK;
+const cart = new Map(); // id -> qty
+
+// ── Initialisation Telegram ──────────────────────────────
+function initTelegram() {
+  if (!tg) return;
+  tg.ready();
+  tg.expand();
+  try { tg.setHeaderColor("secondary_bg_color"); } catch (_) {}
+  tg.onEvent?.("themeChanged", () => {}); // les variables CSS se mettent à jour seules
+}
+
+// ── Chargement du catalogue (API si dispo, sinon secours) ─
+async function loadProducts() {
+  try {
+    const r = await fetch("/api/products", { cache: "no-store" });
+    if (r.ok) { const d = await r.json(); if (Array.isArray(d) && d.length) PRODUCTS = d; }
+  } catch (_) { /* on garde FALLBACK */ }
+  renderGallery();
+}
+
+// ── Rendu de la galerie ──────────────────────────────────
+function renderGallery() {
+  const g = document.getElementById("gallery");
+  g.innerHTML = "";
+  for (const p of PRODUCTS) {
+    const el = document.createElement("article");
+    el.className = "piece";
+    el.dataset.id = p.id;
+    el.innerHTML = `
+      <div class="frame">
+        <img src="${p.image}" alt="${p.title}"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="fallback" style="--fb:${p.accent||'#333'};display:none">${p.title}</div>
+      </div>
+      <div class="label">
+        <div>
+          <p class="title">${p.title}</p>
+          <p class="meta">${p.medium} · ${p.dimensions}</p>
+        </div>
+        <div class="price">${euro(p.price)}</div>
+      </div>
+      <p class="desc">${p.description||""}</p>
+      <button class="add">Ajouter</button>
+      <div class="qty">
+        <button data-d="-1">–</button><span>1</span><button data-d="1">+</button>
+      </div>`;
+    el.querySelector(".add").onclick = () => setQty(p.id, 1, el);
+    el.querySelectorAll(".qty button").forEach(b =>
+      b.onclick = () => setQty(p.id, (cart.get(p.id)||0) + Number(b.dataset.d), el));
+    g.appendChild(el);
+  }
+}
+
+function setQty(id, qty, el) {
+  qty = Math.max(0, Math.min(99, qty));
+  if (qty === 0) { cart.delete(id); el.classList.remove("in-cart"); }
+  else { cart.set(id, qty); el.classList.add("in-cart"); el.querySelector(".qty span").textContent = qty; }
+  tg?.HapticFeedback?.selectionChanged?.();
+  syncCart();
+}
+
+// ── Synchro panier : badge + MainButton natif ────────────
+function cartTotal() {
+  let t = 0; for (const [id, q] of cart) { const p = PRODUCTS.find(x=>x.id===id); if (p) t += p.price*q; } return t;
+}
+function cartCount() { let n = 0; for (const q of cart.values()) n += q; return n; }
+
+function syncCart() {
+  const n = cartCount(), badge = document.getElementById("badge");
+  badge.textContent = n; badge.classList.toggle("show", n > 0);
+
+  if (tg?.MainButton) {
+    if (n > 0) {
+      tg.MainButton.setText(`Voir la commande · ${euro(cartTotal())}`);
+      tg.MainButton.show();
+    } else tg.MainButton.hide();
+  }
+}
+
+// ── Feuille de commande ──────────────────────────────────
+function openSheet() {
+  const lines = document.getElementById("cartLines");
+  lines.innerHTML = "";
+  if (cart.size === 0) { lines.innerHTML = `<div class="empty">Ton panier est vide.</div>`; }
+  for (const [id, q] of cart) {
+    const p = PRODUCTS.find(x=>x.id===id); if (!p) continue;
+    const row = document.createElement("div");
+    row.className = "cart-line";
+    row.innerHTML = `<div>${p.title} <span class="n">× ${q}</span></div><div>${euro(p.price*q)}</div>`;
+    lines.appendChild(row);
+  }
+  document.getElementById("cartTotal").textContent = euro(cartTotal());
+  document.getElementById("checkoutBtn").disabled = cart.size === 0;
+  document.getElementById("scrim").classList.add("show");
+  document.getElementById("sheet").classList.add("show");
+}
+function closeSheet() {
+  document.getElementById("scrim").classList.remove("show");
+  document.getElementById("sheet").classList.remove("show");
+}
+
+// ── Envoi de la commande au backend (avec initData signé) ─
+async function checkout() {
+  const btn = document.getElementById("checkoutBtn");
+  const items = [...cart].map(([id, qty]) => ({ id, qty }));
+  if (!items.length) return;
+  btn.disabled = true; btn.textContent = "Envoi…";
+  try {
+    const r = await fetch("/api/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // ↓ preuve d'identité signée par Telegram, vérifiée côté serveur
+        "X-Telegram-Init-Data": tg?.initData || "",
+      },
+      body: JSON.stringify({ items }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || "Erreur");
+    tg?.HapticFeedback?.notificationOccurred?.("success");
+    cart.clear(); syncCart(); closeSheet();
+    tg?.showPopup
+      ? tg.showPopup({ title: "Commande envoyée", message: `Merci ! Je te confirme tout par message (total ${euro(d.total)}).`, buttons: [{ type: "ok" }] })
+      : alert("Commande envoyée, merci !");
+  } catch (e) {
+    tg?.HapticFeedback?.notificationOccurred?.("error");
+    btn.textContent = "Commander"; btn.disabled = false;
+    (tg?.showAlert || alert)("Échec de l'envoi : " + e.message + "\nOuvre la Mini App depuis le bot pour commander.");
+  }
+}
+
+// ── Onglets ──────────────────────────────────────────────
+document.querySelectorAll("nav.tabs button").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll("nav.tabs button").forEach(x => x.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    b.classList.add("active");
+    document.getElementById(b.dataset.tab).classList.add("active");
+    window.scrollTo(0, 0);
+  };
+});
+
+// ── Ajout à l'écran d'accueil (Bot API 8.0+) ─────────────
+function initHomeScreen() {
+  const btn = document.getElementById("installBtn");
+  const note = document.getElementById("installNote");
+  if (!tg?.checkHomeScreenStatus) { note.textContent = "Mets Telegram à jour pour installer l'icône sur ton écran d'accueil."; return; }
+  tg.checkHomeScreenStatus((status) => {
+    if (status === "added") { note.textContent = "Déjà présent sur ton écran d'accueil ✓"; }
+    else if (status === "missing") { btn.classList.add("show"); }
+    // "unsupported"/"unknown" → on n'affiche rien
+  });
+  btn.onclick = () => tg.addToHomeScreen();       // doit venir d'un clic
+  tg.onEvent?.("homeScreenAdded", () => {
+    btn.classList.remove("show");
+    note.textContent = "Ajouté ✓";
+    tg?.HapticFeedback?.notificationOccurred?.("success");
+  });
+}
+
+// ── Liens de l'onglet Info ───────────────────────────────
+function initInfoLinks() {
+  const contactUsername = "ton_username"; // ← remplace par ton @ Telegram
+  document.getElementById("contact").onclick  = () => (tg?.openTelegramLink || window.open)(`https://t.me/${contactUsername}`);
+  document.getElementById("commissions").onclick = () => (tg?.openTelegramLink || window.open)(`https://t.me/${contactUsername}`);
+  document.getElementById("shipping").onclick  = () =>
+    (tg?.showPopup || (m => alert(m.message)))({ title: "Livraison & retours", message: "Expédition assurée sous 5 jours en France et à l'international. Retour possible sous 14 jours.", buttons: [{ type: "ok" }] });
+}
+
+// ── Boot ─────────────────────────────────────────────────
+initTelegram();
+loadProducts();
+initHomeScreen();
+initInfoLinks();
+document.getElementById("scrim").onclick = closeSheet;
+document.getElementById("checkoutBtn").onclick = checkout;
+document.getElementById("badge").parentElement.addEventListener("click", (e) => { if (cartCount() > 0) openSheet(); });
+tg?.MainButton?.onClick?.(openSheet);
+</script>
+</body>
+</html>
