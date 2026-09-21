@@ -9,25 +9,25 @@
 const PRODUCTS = [
   {
     id: "aurore", title: "Aurore Fracturée", medium: "Acrylique sur toile",
-    dimensions: "80 × 100 cm", price: 450, image: "/tableaux/aurore.jpg",
+    dimensions: "80 × 100 cm", price: 450, image: "/tableaux/aurore.jpg", video: "/tableaux/aurore.mp4",
     accent: "#7c3aed", type: "physical", stock: 20,
     description: "Édition de 20 exemplaires signés et numérotés. Encadrement inclus, expédition sous 5 jours.",
   },
   {
     id: "silence", title: "Silence Urbain", medium: "Techniques mixtes",
-    dimensions: "60 × 60 cm", price: 320, image: "/tableaux/silence.jpg",
+    dimensions: "60 × 60 cm", price: 320, image: "/tableaux/silence.jpg", video: "/tableaux/silence.mp4",
     accent: "#5b21b6", type: "physical", stock: 20,
     description: "Édition de 20 exemplaires. Toile montée sur châssis, prête à accrocher.",
   },
   {
     id: "derive", title: "Dérive", medium: "Encre et gouache sur papier",
-    dimensions: "50 × 70 cm", price: 280, image: "/tableaux/derive.jpg",
+    dimensions: "50 × 70 cm", price: 280, image: "/tableaux/derive.jpg", video: "/tableaux/derive.mp4",
     accent: "#0ea5a0", type: "physical", stock: 20,
     description: "Édition de 20 exemplaires signés. Livrés roulés dans un tube renforcé.",
   },
   {
     id: "memoire", title: "Mémoire Vive", medium: "Impression giclée numérotée",
-    dimensions: "40 × 50 cm", price: 120, image: "/tableaux/memoire.jpg",
+    dimensions: "40 × 50 cm", price: 120, image: "/tableaux/memoire.jpg", video: "/tableaux/memoire.mp4",
     accent: "#a855f7", type: "digital", stock: 20,
     description: "Édition limitée à 20. Fichier haute définition livré après paiement.",
   },
