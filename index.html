@@ -92,6 +92,40 @@
   .dcta button { width:100%; font-family:"Space Grotesk"; font-size:16px; font-weight:700; color:var(--void); background:linear-gradient(120deg, var(--portal), var(--plasma)); border:0; border-radius:13px; padding:17px; cursor:pointer; box-shadow:0 12px 40px -14px rgba(124,255,203,.7); }
 
   /* ── Info ─────────────────────────────────────────────── */
+  /* ── Accueil ─────────────────────────────────────────── */
+  .hero { position:relative; padding:40px 0 22px; text-align:center; }
+  .portal { position:absolute; top:-14px; left:50%; transform:translateX(-50%); width:230px; height:230px; border-radius:50%;
+    background:radial-gradient(circle, rgba(124,255,203,.28), rgba(180,131,255,.20) 45%, transparent 70%); filter:blur(10px); z-index:-1; animation:pulse 6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:translateX(-50%) scale(1);opacity:.85;} 50%{transform:translateX(-50%) scale(1.09);opacity:1;} }
+  .hero-kicker { font-family:"Space Grotesk"; font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:var(--portal); }
+  .hero-title { font-family:"Space Grotesk"; font-weight:700; font-size:clamp(32px,10.5vw,44px); line-height:1.02; margin:10px 0 0; letter-spacing:-0.02em; }
+  .hero-title span { background:linear-gradient(120deg,var(--plasma),var(--portal)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--haze); font-size:15px; margin:14px auto 0; max-width:32ch; }
+  .hero-cta { margin-top:22px; font-family:"Space Grotesk"; font-weight:700; font-size:16px; color:var(--void); background:linear-gradient(120deg,var(--portal),var(--plasma)); border:0; border-radius:13px; padding:16px 30px; cursor:pointer; box-shadow:0 14px 44px -14px rgba(124,255,203,.8); }
+  .promo { display:flex; gap:12px; align-items:center; margin:6px 0 0; padding:14px 16px; border:1px solid var(--line); border-radius:16px; background:rgba(124,255,203,.06); }
+  .promo-ic { width:38px; height:38px; flex:0 0 38px; display:flex; align-items:center; justify-content:center; border-radius:11px; background:rgba(124,255,203,.15); color:var(--portal); font-family:"Space Grotesk"; font-weight:700; font-size:17px; }
+  .promo b { font-family:"Space Grotesk"; font-size:14.5px; }
+  .promo span { color:var(--haze); font-size:12.5px; }
+  .home-h { font-family:"Space Grotesk"; font-weight:600; font-size:18px; margin:28px 0 12px; }
+  .feat { display:flex; width:100%; text-align:left; border:1px solid var(--line); background:var(--card); border-radius:18px; overflow:hidden; cursor:pointer; padding:0; box-shadow:0 18px 44px -28px rgba(124,58,237,.9); }
+  .feat:active { transform:scale(.99); }
+  .feat .fm { position:relative; width:118px; flex:0 0 118px; aspect-ratio:1/1; background:var(--nebula); }
+  .feat .fm img { width:100%; height:100%; object-fit:cover; display:block; }
+  .feat .fb2 { position:absolute; inset:0; display:none; background:radial-gradient(80% 60% at 70% 20%, color-mix(in srgb, var(--fb,#7c3aed) 65%, transparent), transparent 70%), linear-gradient(150deg, color-mix(in srgb, var(--fb,#7c3aed) 55%, var(--void)), var(--void)); }
+  .feat .fi { padding:14px; display:flex; flex-direction:column; justify-content:center; }
+  .feat .fi .n { font-family:"Space Grotesk"; font-weight:600; font-size:17px; }
+  .feat .fi .s { color:var(--haze); font-size:12.5px; margin-top:3px; }
+  .feat .fi .p { margin-top:8px; font-family:"Space Grotesk"; color:var(--portal); font-weight:600; }
+  .feat .fi .go { margin-top:6px; font-size:12.5px; color:var(--plasma); font-family:"Space Grotesk"; }
+  .steps { display:flex; flex-direction:column; gap:10px; }
+  .step { display:flex; gap:14px; align-items:center; padding:14px 16px; border:1px solid var(--line); border-radius:14px; background:var(--card); }
+  .step .sn { width:30px; height:30px; flex:0 0 30px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(180,131,255,.15); color:var(--plasma); font-family:"Space Grotesk"; font-weight:700; }
+  .step b { font-family:"Space Grotesk"; display:block; }
+  .step span { color:var(--haze); font-size:13px; }
+  .quick { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding-bottom:22px; }
+  .qa { display:flex; flex-direction:column; align-items:center; gap:7px; padding:16px 6px; border:1px solid var(--line); border-radius:14px; background:var(--card); color:var(--star); font-family:"Space Grotesk"; font-size:12.5px; cursor:pointer; text-align:center; }
+  .qa .qic { font-size:19px; color:var(--plasma); }
+
   .prose { padding:22px 4px 8px; }
   .prose h2 { font-family:"Space Grotesk"; font-weight:600; font-size:26px; margin:0 0 10px; }
   .prose p { font-size:15.5px; }
@@ -138,7 +172,35 @@
 <div class="cosmos"></div>
 <div id="stars"></div>
 
-<section id="boutique" class="view active">
+<section id="accueil" class="view active">
+  <div class="hero">
+    <div class="portal"></div>
+    <div class="hero-kicker">Atelier · dimension C-137</div>
+    <h1 class="hero-title">Bienvenue chez<br><span>DR RS</span> ✦</h1>
+    <p class="hero-sub">Des tableaux uniques, traînés à travers la galaxie jusqu'à ton salon.</p>
+    <button class="hero-cta" id="goShop">Explorer la boutique</button>
+  </div>
+  <div class="promo">
+    <div class="promo-ic">%</div>
+    <div><b>Plus tu en prends, moins c'est cher.</b><br><span>Jusqu'à −20% dès 3 exemplaires du même tableau.</span></div>
+  </div>
+  <h2 class="home-h">L'œuvre du moment</h2>
+  <div id="featured"></div>
+  <h2 class="home-h">Comment ça marche</h2>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div><b>Choisis</b><span>Parcours la galerie et ouvre un tableau.</span></div></div>
+    <div class="step"><div class="sn">2</div><div><b>Commande</b><span>Choisis ton format, ajoute au panier.</span></div></div>
+    <div class="step"><div class="sn">3</div><div><b>Reçois</b><span>Je te confirme paiement et livraison par message.</span></div></div>
+  </div>
+  <h2 class="home-h">Raccourcis</h2>
+  <div class="quick">
+    <button class="qa" id="qaShare"><span class="qic">&#8599;</span>Partager</button>
+    <button class="qa" id="qaInstall"><span class="qic">&#65291;</span>Écran d'accueil</button>
+    <button class="qa" id="qaContact"><span class="qic">&#9993;</span>Contact</button>
+  </div>
+</section>
+
+<section id="boutique" class="view">
   <header class="masthead">
     <div class="kicker">Œuvres · dimension C-137</div>
     <h1 class="wordmark">La boutique</h1>
@@ -181,7 +243,8 @@
 </div>
 
 <nav class="tabs">
-  <button data-tab="boutique" class="active"><span class="ic">&#10022;</span>Boutique</button>
+  <button data-tab="accueil" class="active"><span class="ic">&#8962;</span>Accueil</button>
+  <button data-tab="boutique"><span class="ic">&#10022;</span>Boutique</button>
   <button data-act="cart"><span class="ic">&#128722;</span>Panier<span class="badge" id="badge"></span></button>
   <button data-tab="info"><span class="ic">&#9678;</span>Infos</button>
 </nav>
@@ -214,6 +277,8 @@ const euro = (n) => n.toLocaleString("fr-FR") + " €";
 let PRODUCTS = FALLBACK;
 const cart = new Map();
 let current = null, selectedQty = 1;
+const CONTACT_USERNAME = "ton_username";     // ← ton @ Telegram
+const SHOP_LINK = "https://t.me/drrs59_bot"; // ← lien de ton bot (partage)
 
 function initTelegram() {
   if (!tg) return;
@@ -230,7 +295,7 @@ function makeStars() {
 }
 async function loadProducts() {
   try { const r=await fetch("/api/products",{cache:"no-store"}); if (r.ok){ const d=await r.json(); if (Array.isArray(d)&&d.length) PRODUCTS=d; } } catch(_) {}
-  renderGrid();
+  renderGrid(); renderFeatured();
 }
 function renderGrid() {
   const g=document.getElementById("grid"); g.innerHTML="";
@@ -340,14 +405,31 @@ async function checkout(){
     (tg?.showAlert||alert)("Échec de l'envoi : "+e.message+"\nOuvre la Mini App depuis le bot pour commander.");
   }
 }
+function activateTab(name){
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  const btn=document.querySelector(`nav.tabs button[data-tab="${name}"]`); if (btn) btn.classList.add("active");
+  const view=document.getElementById(name); if (view) view.classList.add("active"); window.scrollTo(0,0);
+}
 document.querySelectorAll("nav.tabs button").forEach(b=>{
-  b.onclick=()=>{
-    if (b.dataset.act==="cart"){ openSheet(); return; }
-    document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.remove("active"));
-    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-    b.classList.add("active"); document.getElementById(b.dataset.tab).classList.add("active"); window.scrollTo(0,0);
-  };
+  b.onclick=()=>{ if (b.dataset.act==="cart"){ openSheet(); return; } activateTab(b.dataset.tab); };
 });
+function renderFeatured(){
+  const box=document.getElementById("featured"); if (!box) return;
+  const p=PRODUCTS[0]; if (!p){ box.innerHTML=""; return; }
+  const b=document.createElement("button"); b.className="feat";
+  b.innerHTML=`<div class="fm"><img src="${p.image}" alt="${p.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div class="fb2" style="--fb:${p.accent||'#7c3aed'}"></div></div>`+
+    `<div class="fi"><div class="n">${p.title} ${p.emoji||""}</div><div class="s">${p.subtitle||""}</div><div class="p">Dès ${euro(lineTotal(p.price,FORMAT_QTYS[0]))}</div><div class="go">Découvrir ›</div></div>`;
+  b.onclick=()=>openDetail(p); box.innerHTML=""; box.appendChild(b);
+}
+function shareShop(){
+  const url=`https://t.me/share/url?url=${encodeURIComponent(SHOP_LINK)}&text=${encodeURIComponent("Découvre les tableaux DR RS ✦")}`;
+  (tg?.openTelegramLink||window.open)(url);
+}
+function triggerInstall(){
+  if (tg?.addToHomeScreen && tg?.checkHomeScreenStatus) tg.addToHomeScreen();
+  else (tg?.showAlert||alert)("Mets Telegram à jour pour ajouter l'icône à ton écran d'accueil.");
+}
 function initHomeScreen(){
   const btn=document.getElementById("installBtn"), note=document.getElementById("installNote");
   if (!tg?.checkHomeScreenStatus){ note.textContent="Mets Telegram à jour pour installer l'icône sur ton écran d'accueil."; return; }
@@ -356,12 +438,16 @@ function initHomeScreen(){
   tg.onEvent?.("homeScreenAdded",()=>{ btn.classList.remove("show"); note.textContent="Ajouté ✓"; tg?.HapticFeedback?.notificationOccurred?.("success"); });
 }
 function initInfoLinks(){
-  const u="ton_username";
+  const u=CONTACT_USERNAME;
   document.getElementById("contact").onclick=()=>(tg?.openTelegramLink||window.open)(`https://t.me/${u}`);
   document.getElementById("commissions").onclick=()=>(tg?.openTelegramLink||window.open)(`https://t.me/${u}`);
   document.getElementById("shipping").onclick=()=>(tg?.showPopup||(m=>alert(m.message)))({ title:"Livraison & retours", message:"Expédition assurée sous 5 jours en France et à l'international. Retour possible sous 14 jours.", buttons:[{type:"ok"}] });
 }
 initTelegram(); makeStars(); loadProducts(); initHomeScreen(); initInfoLinks();
+document.getElementById("goShop").onclick=()=>activateTab("boutique");
+document.getElementById("qaShare").onclick=shareShop;
+document.getElementById("qaInstall").onclick=triggerInstall;
+document.getElementById("qaContact").onclick=()=>(tg?.openTelegramLink||window.open)(`https://t.me/${CONTACT_USERNAME}`);
 document.getElementById("addToCartBtn").onclick=addToCart;
 document.getElementById("detailClose").onclick=closeDetail;
 document.getElementById("dscrim").onclick=closeDetail;
