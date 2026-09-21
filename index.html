@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>Atelier — Boutique cosmique</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --void:#070312; --void-2:#0d0722; --nebula:#17102e; --nebula-2:#1e1440;
+    --line:rgba(168,120,255,.22); --plasma:#b483ff; --portal:#7CFFCB; --star:#f3efff; --haze:#9c8fc7;
+    --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px); --nav-h:62px;
+  }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; height:100%; }
+  body { background:var(--void); color:var(--star); font-family:"Inter",system-ui,sans-serif;
+    font-size:16px; line-height:1.5; padding-top:var(--safe-top);
+    padding-bottom:calc(var(--nav-h) + var(--safe-bottom)); overflow-x:hidden; }
+  .cosmos { position:fixed; inset:0; z-index:-2; overflow:hidden;
+    background:
+      radial-gradient(120% 80% at 12% -5%, rgba(124,58,237,.35), transparent 55%),
+      radial-gradient(90% 70% at 95% 8%, rgba(180,131,255,.22), transparent 50%),
+      radial-gradient(120% 90% at 50% 110%, rgba(124,255,203,.10), transparent 55%),
+      linear-gradient(180deg, var(--void), var(--void-2)); }
+  .cosmos::after { content:""; position:absolute; inset:-20%;
+    background:radial-gradient(60% 40% at 30% 40%, rgba(180,131,255,.14), transparent 60%);
+    transform:rotate(-18deg); filter:blur(20px); animation:drift 32s ease-in-out infinite alternate; }
+  @keyframes drift { from{transform:rotate(-18deg) translateY(-3%);} to{transform:rotate(-14deg) translateY(3%);} }
+  #stars { position:fixed; inset:0; z-index:-1; pointer-events:none; }
+  .star { position:absolute; border-radius:50%; background:var(--star); opacity:.5; animation:twinkle 4s ease-in-out infinite; }
+  @keyframes twinkle { 0%,100%{opacity:.15;} 50%{opacity:.9;} }
+  .view { display:none; padding:0 20px; }
+  .view.active { display:block; }
+  header.masthead { padding:30px 0 20px; }
+  .kicker { font-family:"Space Grotesk"; font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:var(--portal); }
+  .wordmark { font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:clamp(34px,11vw,48px);
+    line-height:.98; margin:8px 0 0; letter-spacing:-0.02em;
+    background:linear-gradient(120deg, var(--star) 20%, var(--plasma) 60%, var(--portal));
+    -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 42px rgba(180,131,255,.35); }
+  .masthead p { margin:12px 0 0; max-width:60ch; color:var(--haze); font-size:15px; }
+
+  /* ── Grille de visuels (menu) ─────────────────────────── */
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; padding-bottom:24px; }
+  .tile { position:relative; border:0; padding:0; margin:0; cursor:pointer;
+    aspect-ratio:4/5; border-radius:14px; overflow:hidden; background:var(--nebula);
+    border:1px solid var(--line); box-shadow:0 14px 40px -24px rgba(124,58,237,.8); }
+  .tile:active { transform:scale(.985); }
+  .tile img { width:100%; height:100%; object-fit:cover; display:block; }
+  .tile .fallback { position:absolute; inset:0; display:none;
+    background:radial-gradient(80% 60% at 70% 20%, color-mix(in srgb, var(--fb,#7c3aed) 65%, transparent), transparent 70%),
+      linear-gradient(150deg, color-mix(in srgb, var(--fb,#7c3aed) 55%, var(--void)), var(--void)); }
+  .tile .cap { position:absolute; left:0; right:0; bottom:0; padding:26px 12px 10px; text-align:left;
+    font-family:"Space Grotesk"; font-weight:600; font-size:14px; color:#fff;
+    background:linear-gradient(0deg, rgba(3,1,10,.8), transparent); }
+
+  /* ── Page détail (après clic) ─────────────────────────── */
+  .detail { position:fixed; inset:0; z-index:40; background:var(--void);
+    transform:translateX(100%); transition:transform .28s ease; overflow-y:auto;
+    padding-top:var(--safe-top); display:flex; flex-direction:column; }
+  .detail.show { transform:translateX(0); }
+  .detail::before { content:""; position:fixed; inset:0; z-index:-1;
+    background:radial-gradient(120% 70% at 20% 0%, rgba(124,58,237,.3), transparent 55%), linear-gradient(180deg,var(--void),var(--void-2)); }
+  .back { align-self:flex-start; margin:12px 0 0 14px; background:rgba(180,131,255,.12);
+    border:1px solid var(--line); color:var(--star); font-family:"Space Grotesk"; font-weight:500;
+    font-size:14px; padding:8px 14px; border-radius:999px; cursor:pointer; }
+  .detail-scroll { padding:16px 20px 130px; }
+  .detail-img { position:relative; width:100%; aspect-ratio:4/5; border-radius:16px; overflow:hidden;
+    background:var(--nebula); border:1px solid var(--line); box-shadow:0 24px 60px -28px rgba(124,58,237,.9); }
+  .detail-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .detail-img .fallback { position:absolute; inset:0; display:none;
+    background:radial-gradient(80% 60% at 70% 20%, color-mix(in srgb, var(--fb,#7c3aed) 65%, transparent), transparent 70%),
+      linear-gradient(150deg, color-mix(in srgb, var(--fb,#7c3aed) 55%, var(--void)), var(--void)); }
+  .detail h2 { font-family:"Space Grotesk"; font-weight:600; font-size:26px; margin:18px 0 4px; }
+  .detail .meta { color:var(--haze); font-size:14px; margin:0; }
+  .detail .desc { color:var(--haze); font-size:14.5px; margin:14px 0 0; }
+  .tier { margin:18px 0 0; padding:14px 16px; border:1px solid var(--line); border-radius:12px;
+    background:rgba(124,255,203,.06); font-size:13.5px; color:var(--star); }
+  .tier b { color:var(--portal); font-family:"Space Grotesk"; }
+  .stock { color:var(--haze); font-size:12.5px; margin:10px 0 0; }
+  .stepper { margin:20px 0 0; display:flex; align-items:center; gap:16px; }
+  .stepper .ctrl { display:flex; align-items:center; border:1px solid var(--plasma);
+    border-radius:12px; overflow:hidden; background:rgba(180,131,255,.08); }
+  .stepper .ctrl button { background:transparent; border:0; color:var(--plasma); font-size:24px; width:52px; height:50px; cursor:pointer; }
+  .stepper .ctrl span { font-family:"Space Grotesk"; font-weight:600; min-width:36px; text-align:center; }
+  .stepper .pu { font-size:13px; color:var(--haze); }
+  .stepper .pu b { color:var(--star); font-family:"Space Grotesk"; font-size:16px; }
+  .stepper .pu .old { text-decoration:line-through; color:var(--haze); margin-left:6px; font-size:13px; }
+  .detail-cta { position:fixed; left:0; right:0; bottom:0; z-index:41;
+    padding:14px 20px calc(16px + var(--safe-bottom)); background:linear-gradient(0deg, var(--void) 70%, transparent);
+    }
+  .detail-cta button { width:100%; font-family:"Space Grotesk"; font-size:16px; font-weight:700; color:var(--void);
+    background:linear-gradient(120deg, var(--portal), var(--plasma)); border:0; border-radius:12px; padding:17px;
+    cursor:pointer; box-shadow:0 12px 40px -14px rgba(124,255,203,.7); }
+
+  /* ── Info ─────────────────────────────────────────────── */
+  .prose { padding:26px 0 8px; }
+  .prose h2 { font-family:"Space Grotesk"; font-weight:600; font-size:27px; margin:0 0 10px; }
+  .prose p { font-size:15.5px; }
+  .prose .muted { color:var(--haze); }
+  .row-link { display:flex; align-items:center; justify-content:space-between; padding:17px 0;
+    border-top:1px solid var(--line); font-size:15px; cursor:pointer; }
+  .row-link:last-of-type { border-bottom:1px solid var(--line); }
+  .row-link .chev { color:var(--plasma); }
+  .install { margin-top:26px; width:100%; font-family:"Space Grotesk"; font-size:15px; font-weight:600;
+    color:var(--void); background:linear-gradient(120deg, var(--plasma), var(--portal));
+    border:0; border-radius:12px; padding:16px; cursor:pointer; display:none;
+    box-shadow:0 12px 40px -12px rgba(180,131,255,.8); }
+  .install.show { display:block; }
+
+  /* ── Onglets ──────────────────────────────────────────── */
+  nav.tabs { position:fixed; left:0; right:0; bottom:0; z-index:20;
+    height:calc(var(--nav-h) + var(--safe-bottom)); padding-bottom:var(--safe-bottom);
+    display:flex; background:rgba(13,7,34,.86); backdrop-filter:blur(14px); border-top:1px solid var(--line); }
+  nav.tabs button { flex:1; background:transparent; border:0; color:var(--haze); font-family:"Space Grotesk";
+    font-size:12px; font-weight:500; cursor:pointer; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:4px; position:relative; }
+  nav.tabs button.active { color:var(--star); text-shadow:0 0 16px rgba(180,131,255,.9); }
+  nav.tabs .ic { font-size:19px; line-height:1; }
+  nav.tabs .badge { position:absolute; transform:translate(15px,-13px); background:var(--portal);
+    color:var(--void); font-family:"Space Grotesk"; font-size:11px; font-weight:700; min-width:18px;
+    height:18px; border-radius:9px; display:none; align-items:center; justify-content:center; padding:0 5px; }
+  nav.tabs .badge.show { display:inline-flex; }
+
+  /* ── Feuille commande ─────────────────────────────────── */
+  .scrim { position:fixed; inset:0; background:rgba(3,1,10,.7); z-index:30; display:none; }
+  .scrim.show { display:block; }
+  .sheet { position:fixed; left:0; right:0; bottom:0; z-index:31;
+    background:linear-gradient(180deg, var(--nebula-2), var(--nebula));
+    border:1px solid var(--line); border-bottom:0; border-radius:20px 20px 0 0;
+    padding:8px 20px calc(20px + var(--safe-bottom)); transform:translateY(100%);
+    transition:transform .25s ease; max-height:82vh; overflow-y:auto; }
+  .sheet.show { transform:translateY(0); }
+  .grabber { width:42px; height:4px; border-radius:2px; background:var(--plasma); opacity:.5; margin:8px auto 16px; }
+  .sheet h3 { font-family:"Space Grotesk"; font-weight:600; font-size:23px; margin:0 0 14px; }
+  .cart-line { display:flex; justify-content:space-between; gap:12px; padding:13px 0; border-bottom:1px solid var(--line); font-size:15px; }
+  .cart-line .n { color:var(--haze); }
+  .total { display:flex; justify-content:space-between; font-family:"Space Grotesk"; font-weight:600; font-size:19px; padding:16px 0 8px; }
+  .total span:last-child { color:var(--portal); }
+  .checkout { width:100%; font-family:"Space Grotesk"; font-size:16px; font-weight:700; color:var(--void);
+    background:linear-gradient(120deg, var(--portal), var(--plasma)); border:0; border-radius:12px;
+    padding:17px; cursor:pointer; margin-top:8px; box-shadow:0 12px 40px -14px rgba(124,255,203,.7); }
+  .checkout:disabled { opacity:.5; }
+  .empty { text-align:center; color:var(--haze); padding:30px 0; }
+  .note { color:var(--haze); font-size:12.5px; text-align:center; margin:12px 0 0; }
+  @media (prefers-reduced-motion:reduce) { *,.cosmos::after,.star { animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="cosmos"></div>
+<div id="stars"></div>
+
+<section id="boutique" class="view active">
+  <header class="masthead">
+    <div class="kicker">Œuvres · dimension C-137</div>
+    <h1 class="wordmark">La boutique</h1>
+    <p>Touche un tableau pour le découvrir et l'acheter. Plus tu en prends du même, moins il coûte.</p>
+  </header>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="info" class="view">
+  <div class="prose">
+    <h2>À propos</h2>
+    <p>Je peins des pièces uniques, entre matière et cosmos. Chaque œuvre est signée et livrée avec son certificat d'authenticité.</p>
+    <p class="muted">Originaux expédiés assurés sous 5 jours. Éditions numériques livrées par message après paiement.</p>
+    <div class="row-link" id="contact"><span>Me contacter</span><span class="chev">&#8250;</span></div>
+    <div class="row-link" id="shipping"><span>Livraison &amp; retours</span><span class="chev">&#8250;</span></div>
+    <div class="row-link" id="commissions"><span>Commande sur mesure</span><span class="chev">&#8250;</span></div>
+    <button class="install" id="installBtn">Ajouter à l'écran d'accueil</button>
+    <p class="note" id="installNote"></p>
+  </div>
+</section>
+
+<!-- PAGE DÉTAIL -->
+<div class="detail" id="detail">
+  <button class="back" id="detailBack">&#8249; Retour</button>
+  <div class="detail-scroll">
+    <div class="detail-img"><img id="dImg" alt="" /><div class="fallback" id="dFallback"></div></div>
+    <h2 id="dTitle"></h2>
+    <p class="meta" id="dMeta"></p>
+    <p class="desc" id="dDesc"></p>
+    <div class="tier" id="dTier"></div>
+    <p class="stock" id="dStock"></p>
+    <div class="stepper">
+      <div class="ctrl"><button id="dMinus">–</button><span id="dQty">1</span><button id="dPlus">+</button></div>
+      <div class="pu" id="dUnit"></div>
+    </div>
+  </div>
+  <div class="detail-cta"><button id="addToCartBtn">Ajouter au panier</button></div>
+</div>
+
+<nav class="tabs">
+  <button data-tab="boutique" class="active"><span class="ic">&#10022;</span>Boutique<span class="badge" id="badge"></span></button>
+  <button data-tab="info"><span class="ic">&#9678;</span>Info</button>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet">
+  <div class="grabber"></div>
+  <h3>Ta commande</h3>
+  <div id="cartLines"></div>
+  <div class="total"><span>Total</span><span id="cartTotal">0 &#8364;</span></div>
+  <button class="checkout" id="checkoutBtn">Commander</button>
+  <p class="note">Paiement et livraison confirmés par message après validation.</p>
+</div>
+
+<script>
+// ── Paliers dégressifs — MÊME règle que products.js côté serveur ──
+const PRICE_TIERS = [ { min:3, discount:0.20 }, { min:2, discount:0.10 } ];
+const unitPrice = (base, qty) => { const t = PRICE_TIERS.find(t => qty >= t.min); return Math.round(base * (1 - (t ? t.discount : 0))); };
+
+const FALLBACK = [
+  { id:"aurore",  title:"Aurore Fracturée", medium:"Acrylique sur toile", dimensions:"80 × 100 cm", price:450, image:"/tableaux/aurore.jpg",  accent:"#7c3aed", stock:20, description:"Édition de 20 exemplaires signés et numérotés." },
+  { id:"silence", title:"Silence Urbain",   medium:"Techniques mixtes",   dimensions:"60 × 60 cm",  price:320, image:"/tableaux/silence.jpg", accent:"#5b21b6", stock:20, description:"Édition de 20 exemplaires. Prête à accrocher." },
+  { id:"derive",  title:"Dérive",           medium:"Encre et gouache sur papier", dimensions:"50 × 70 cm", price:280, image:"/tableaux/derive.jpg", accent:"#0ea5a0", stock:20, description:"Édition de 20 exemplaires signés." },
+  { id:"memoire", title:"Mémoire Vive",     medium:"Impression giclée numérotée", dimensions:"40 × 50 cm", price:120, image:"/tableaux/memoire.jpg", accent:"#a855f7", stock:20, description:"Édition limitée à 20. Fichier HD après paiement." },
+];
+
+const tg = window.Telegram?.WebApp;
+const euro = (n) => n.toLocaleString("fr-FR") + " €";
+let PRODUCTS = FALLBACK;
+const cart = new Map();
+let current = null, detailQty = 1;
+
+function initTelegram() {
+  if (!tg) return;
+  tg.ready(); tg.expand();
+  try { tg.setHeaderColor("#070312"); } catch(_) { try { tg.setHeaderColor("secondary_bg_color"); } catch(_) {} }
+  try { tg.setBackgroundColor("#070312"); } catch(_) {}
+  if (tg.MainButton) { try { tg.MainButton.setParams({ color:"#7CFFCB", text_color:"#070312" }); } catch(_) {} }
+}
+function makeStars() {
+  const box = document.getElementById("stars");
+  const n = Math.min(70, Math.round(window.innerWidth*window.innerHeight/14000));
+  let html=""; for (let i=0;i<n;i++){ const s=(Math.random()*1.6+0.6).toFixed(1);
+    html+=`<span class="star" style="left:${(Math.random()*100).toFixed(2)}%;top:${(Math.random()*100).toFixed(2)}%;width:${s}px;height:${s}px;animation-delay:${(Math.random()*4).toFixed(1)}s"></span>`; }
+  box.innerHTML=html;
+}
+async function loadProducts() {
+  try { const r=await fetch("/api/products",{cache:"no-store"}); if (r.ok){ const d=await r.json(); if (Array.isArray(d)&&d.length) PRODUCTS=d; } } catch(_) {}
+  renderGrid();
+}
+function renderGrid() {
+  const g=document.getElementById("grid"); g.innerHTML="";
+  for (const p of PRODUCTS) {
+    const b=document.createElement("button"); b.className="tile";
+    b.innerHTML=`
+      <img src="${p.image}" alt="${p.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+      <div class="fallback" style="--fb:${p.accent||'#7c3aed'}"></div>
+      <div class="cap">${p.title}</div>`;
+    b.onclick=()=>openDetail(p);
+    g.appendChild(b);
+  }
+}
+
+// ── Détail ──────────────────────────────────────────────
+function openDetail(p) {
+  current=p; detailQty = cart.get(p.id) || 1;
+  const img=document.getElementById("dImg"), fb=document.getElementById("dFallback");
+  img.style.display=""; fb.style.display="none";
+  img.src=p.image; img.onerror=()=>{ img.style.display="none"; fb.style.display="block"; };
+  fb.style.setProperty("--fb", p.accent||"#7c3aed");
+  document.getElementById("dTitle").textContent=p.title;
+  document.getElementById("dMeta").textContent=`${p.medium} · ${p.dimensions}`;
+  document.getElementById("dDesc").textContent=p.description||"";
+  document.getElementById("dTier").innerHTML=`Prix dégressif : <b>×2 : −10%</b> · <b>×3 et + : −20%</b> par exemplaire.`;
+  document.getElementById("dStock").textContent=`Édition de ${p.stock||20} exemplaires.`;
+  renderDetailPrice();
+  document.getElementById("detail").classList.add("show");
+}
+function closeDetail(){ document.getElementById("detail").classList.remove("show"); }
+function renderDetailPrice() {
+  const p=current; const unit=unitPrice(p.price, detailQty); const line=unit*detailQty;
+  document.getElementById("dQty").textContent=detailQty;
+  const old = unit < p.price ? `<span class="old">${euro(p.price)}</span>` : "";
+  document.getElementById("dUnit").innerHTML=`<b>${euro(unit)}</b> / exemplaire ${old}`;
+  document.getElementById("addToCartBtn").textContent=`Ajouter au panier · ${euro(line)}`;
+}
+function stepDetail(d) {
+  const max=current.stock||20;
+  detailQty=Math.max(1, Math.min(max, detailQty+d));
+  tg?.HapticFeedback?.selectionChanged?.(); renderDetailPrice();
+}
+function addToCart() {
+  cart.set(current.id, detailQty);
+  tg?.HapticFeedback?.notificationOccurred?.("success");
+  syncCart(); closeDetail();
+}
+
+function cartTotal(){ let t=0; for (const [id,q] of cart){ const p=PRODUCTS.find(x=>x.id===id); if (p) t+=unitPrice(p.price,q)*q; } return t; }
+function cartCount(){ let n=0; for (const q of cart.values()) n+=q; return n; }
+function syncCart(){
+  const n=cartCount(), badge=document.getElementById("badge");
+  badge.textContent=n; badge.classList.toggle("show",n>0);
+  if (tg?.MainButton){ if (n>0){ tg.MainButton.setText(`Voir la commande · ${euro(cartTotal())}`); tg.MainButton.show(); } else tg.MainButton.hide(); }
+}
+function openSheet(){
+  const lines=document.getElementById("cartLines"); lines.innerHTML="";
+  if (cart.size===0) lines.innerHTML=`<div class="empty">Ton panier est vide.</div>`;
+  for (const [id,q] of cart){ const p=PRODUCTS.find(x=>x.id===id); if (!p) continue;
+    const unit=unitPrice(p.price,q); const off = unit<p.price ? ` · −${Math.round((1-unit/p.price)*100)}%` : "";
+    const row=document.createElement("div"); row.className="cart-line";
+    row.innerHTML=`<div>${p.title} <span class="n">× ${q}${off}</span></div><div>${euro(unit*q)}</div>`; lines.appendChild(row); }
+  document.getElementById("cartTotal").textContent=euro(cartTotal());
+  document.getElementById("checkoutBtn").disabled=cart.size===0;
+  document.getElementById("scrim").classList.add("show");
+  document.getElementById("sheet").classList.add("show");
+}
+function closeSheet(){ document.getElementById("scrim").classList.remove("show"); document.getElementById("sheet").classList.remove("show"); }
+async function checkout(){
+  const btn=document.getElementById("checkoutBtn");
+  const items=[...cart].map(([id,qty])=>({id,qty})); if (!items.length) return;
+  btn.disabled=true; btn.textContent="Envoi…";
+  try {
+    const r=await fetch("/api/order",{ method:"POST", headers:{ "Content-Type":"application/json", "X-Telegram-Init-Data":tg?.initData||"" }, body:JSON.stringify({items}) });
+    const d=await r.json(); if (!r.ok) throw new Error(d.error||"Erreur");
+    tg?.HapticFeedback?.notificationOccurred?.("success");
+    cart.clear(); syncCart(); closeSheet();
+    tg?.showPopup ? tg.showPopup({ title:"Commande envoyée", message:`Merci ! Je te confirme tout par message (total ${euro(d.total)}).`, buttons:[{type:"ok"}] }) : alert("Commande envoyée, merci !");
+  } catch(e){
+    tg?.HapticFeedback?.notificationOccurred?.("error");
+    btn.textContent="Commander"; btn.disabled=false;
+    (tg?.showAlert||alert)("Échec de l'envoi : "+e.message+"\nOuvre la Mini App depuis le bot pour commander.");
+  }
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>{
+  b.onclick=()=>{ document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+    b.classList.add("active"); document.getElementById(b.dataset.tab).classList.add("active"); window.scrollTo(0,0); };
+});
+function initHomeScreen(){
+  const btn=document.getElementById("installBtn"), note=document.getElementById("installNote");
+  if (!tg?.checkHomeScreenStatus){ note.textContent="Mets Telegram à jour pour installer l'icône sur ton écran d'accueil."; return; }
+  tg.checkHomeScreenStatus((s)=>{ if (s==="added") note.textContent="Déjà présent sur ton écran d'accueil ✓"; else if (s==="missing") btn.classList.add("show"); });
+  btn.onclick=()=>tg.addToHomeScreen();
+  tg.onEvent?.("homeScreenAdded",()=>{ btn.classList.remove("show"); note.textContent="Ajouté ✓"; tg?.HapticFeedback?.notificationOccurred?.("success"); });
+}
+function initInfoLinks(){
+  const u="ton_username";
+  document.getElementById("contact").onclick=()=>(tg?.openTelegramLink||window.open)(`https://t.me/${u}`);
+  document.getElementById("commissions").onclick=()=>(tg?.openTelegramLink||window.open)(`https://t.me/${u}`);
+  document.getElementById("shipping").onclick=()=>(tg?.showPopup||(m=>alert(m.message)))({ title:"Livraison & retours", message:"Expédition assurée sous 5 jours en France et à l'international. Retour possible sous 14 jours.", buttons:[{type:"ok"}] });
+}
+initTelegram(); makeStars(); loadProducts(); initHomeScreen(); initInfoLinks();
+document.getElementById("dMinus").onclick=()=>stepDetail(-1);
+document.getElementById("dPlus").onclick=()=>stepDetail(1);
+document.getElementById("addToCartBtn").onclick=addToCart;
+document.getElementById("detailBack").onclick=closeDetail;
+document.getElementById("scrim").onclick=closeSheet;
+document.getElementById("checkoutBtn").onclick=checkout;
+document.querySelector('nav.tabs button[data-tab="boutique"]').addEventListener("click",()=>{ if (cartCount()>0) openSheet(); });
+tg?.MainButton?.onClick?.(openSheet);
+</script>
+</body>
+</html>
