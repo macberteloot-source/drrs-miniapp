@@ -7,7 +7,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root{
     --bg:#3a0d6e; --bg2:#2a0850; --panel:#5a189f; --panel2:#7127c4;
@@ -26,7 +26,7 @@
   .view.active{display:block;}
   header.masthead{padding:26px 4px 16px;}
   .kicker{font-family:"Fredoka"; font-weight:600; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--glow);}
-  .wordmark{font-family:"Bangers",cursive; font-weight:400; font-size:clamp(34px,11vw,46px); line-height:1; margin:8px 0 0; letter-spacing:.03em; color:#fff; text-shadow:0 3px 0 rgba(34,10,68,.5), 0 0 24px rgba(255,90,224,.4);}
+  .wordmark{font-family:"Baloo 2",system-ui,cursive; font-weight:800; font-size:clamp(34px,11vw,46px); line-height:1; margin:8px 0 0; letter-spacing:.03em; color:#fff; text-shadow:0 3px 0 rgba(34,10,68,.5), 0 0 24px rgba(255,90,224,.4);}
   .masthead p{margin:8px 0 0; max-width:60ch; color:var(--sub); font-size:14.5px;}
   .hero{padding:28px 0 12px; text-align:center;}
   .hero-logo{width:100%; max-width:270px; display:block; margin:6px auto 0;
@@ -45,7 +45,7 @@
   .promo-ic{width:40px;height:40px;flex:0 0 40px;display:flex;align-items:center;justify-content:center;border-radius:12px;
     background:linear-gradient(180deg,var(--glow),var(--glow2)); color:#fff; font-weight:700; font-size:18px; box-shadow:inset 0 1px 0 rgba(255,255,255,.4);}
   .promo b{font-weight:700;} .promo span{color:var(--sub); font-size:12.5px;}
-  .home-h{font-family:"Bangers",cursive; font-weight:400; font-size:22px; letter-spacing:.04em; margin:26px 0 12px; color:#fff; text-shadow:0 2px 0 rgba(34,10,68,.4);}
+  .home-h{font-family:"Baloo 2",system-ui,cursive; font-weight:800; font-size:22px; letter-spacing:.04em; margin:26px 0 12px; color:#fff; text-shadow:0 2px 0 rgba(34,10,68,.4);}
   .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; padding-bottom:24px;}
   .card{position:relative; text-align:left; cursor:pointer; padding:0; border-radius:20px; overflow:hidden;
     background:linear-gradient(165deg,var(--panel2),var(--panel)); border:1px solid rgba(255,255,255,.16);
@@ -57,8 +57,8 @@
   .vbadge{position:absolute; top:10px; right:10px; font-family:"Fredoka"; font-weight:700; font-size:10px; letter-spacing:.1em; color:#fff;
     background:linear-gradient(180deg,var(--glow),var(--glow2)); padding:4px 9px; border-radius:8px; box-shadow:inset 0 1px 0 rgba(255,255,255,.4);}
   .card-body{padding:12px 13px 14px;}
-  .card-name{font-family:"Fredoka"; font-weight:700; font-size:16px; line-height:1.15; color:#fff;}
-  .card-sub{color:var(--sub); font-size:12.5px; margin-top:4px;}
+  .card-name{font-family:"Baloo 2",system-ui,cursive; font-weight:800; font-size:21px; line-height:1.1; color:#fff;}
+  .card-sub{font-family:"Baloo 2",system-ui,cursive; font-weight:600; color:var(--sub); font-size:12.5px; margin-top:4px;}
   .card-price{margin-top:12px; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
   .card-price .des{font-size:10px; letter-spacing:.12em; color:var(--sub); text-transform:uppercase;}
   .card-price b{font-family:"Fredoka"; font-weight:700; font-size:20px; color:#fff;}
@@ -71,8 +71,8 @@
   .feat .fm img{width:100%;height:100%;object-fit:cover;display:block;}
   .feat .fb2{position:absolute;inset:0;display:none;background:linear-gradient(150deg, color-mix(in srgb, var(--fb,#d24cf0) 60%, var(--bg2)), var(--bg2));}
   .feat .fi{padding:14px; display:flex; flex-direction:column; justify-content:center;}
-  .feat .fi .n{font-family:"Fredoka"; font-weight:700; font-size:17px;}
-  .feat .fi .s{color:var(--sub); font-size:12.5px; margin-top:3px;}
+  .feat .fi .n{font-family:"Baloo 2",system-ui,cursive; font-weight:800; font-size:17px;}
+  .feat .fi .s{font-family:"Baloo 2",system-ui,cursive; font-weight:600; color:var(--sub); font-size:12.5px; margin-top:3px;}
   .feat .fi .p{margin-top:8px; font-weight:700; color:var(--glow);}
   .feat .fi .go{margin-top:6px; font-size:12.5px; color:#fff; opacity:.8;}
   .steps{display:flex; flex-direction:column; gap:10px;}
@@ -86,7 +86,7 @@
     background:linear-gradient(160deg, rgba(255,255,255,.12), rgba(255,255,255,.03)); border:1px solid var(--line); color:#fff; font-family:"Fredoka"; font-weight:600; font-size:12.5px; cursor:pointer;}
   .qa:active{transform:translateY(2px);} .qa .qic{font-size:20px; color:var(--glow);}
   .prose{padding:22px 4px 8px;}
-  .prose h2{font-family:"Bangers",cursive; font-weight:400; font-size:26px; letter-spacing:.03em; margin:0 0 10px;}
+  .prose h2{font-family:"Baloo 2",system-ui,cursive; font-weight:800; font-size:26px; letter-spacing:.03em; margin:0 0 10px;}
   .prose p{font-size:15.5px;} .prose .muted{color:var(--sub);}
   .row-link{display:flex;align-items:center;justify-content:space-between;padding:17px 0;border-top:1px solid var(--line);font-size:15px;cursor:pointer;}
   .row-link:last-of-type{border-bottom:1px solid var(--line);}
@@ -105,7 +105,7 @@
   .sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;background:linear-gradient(180deg,var(--panel),var(--bg));border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;padding:8px 20px calc(20px+var(--safe-bottom));transform:translateY(100%);transition:transform .25s ease;max-height:82vh;overflow-y:auto;}
   .sheet.show{transform:translateY(0);}
   .grabber{width:42px;height:5px;border-radius:3px;background:rgba(255,255,255,.4);margin:8px auto 16px;}
-  .sheet h3{font-family:"Bangers",cursive;font-weight:400;font-size:24px;letter-spacing:.03em;margin:0 0 14px;}
+  .sheet h3{font-family:"Baloo 2",system-ui,cursive;font-weight:800;font-size:24px;letter-spacing:.03em;margin:0 0 14px;}
   .cart-line{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:15px;}
   .cart-line .n{color:var(--sub);}
   .total{display:flex;justify-content:space-between;font-family:"Fredoka";font-weight:700;font-size:19px;padding:16px 0 8px;}
@@ -115,7 +115,7 @@
   .dsheet{position:fixed;left:0;right:0;bottom:0;z-index:41;height:92vh;background:linear-gradient(180deg,var(--panel),var(--bg));border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;transform:translateY(100%);transition:transform .3s ease;display:flex;flex-direction:column;}
   .dsheet.show{transform:translateY(0);}
   .dhead{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid var(--line);}
-  .dhead h3{font-family:"Fredoka";font-weight:700;font-size:20px;margin:0;display:flex;align-items:center;gap:8px;}
+  .dhead h3{font-family:"Baloo 2",system-ui,cursive;font-weight:800;font-size:21px;margin:0;display:flex;align-items:center;gap:8px;}
   .close{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.12);color:#fff;font-size:16px;cursor:pointer;}
   .dscroll{overflow-y:auto;padding:16px 18px 130px;flex:1;}
   .media{position:relative;width:100%;aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:var(--bg2);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.2);}
@@ -155,6 +155,39 @@
   #marble{position:fixed;inset:0;z-index:-3;pointer-events:none;background:#170535;}
   #marble svg{width:100%;height:100%;display:block;}
   .veil{position:fixed;inset:0;z-index:-2;pointer-events:none;background:linear-gradient(180deg, rgba(24,6,52,.74) 0%, rgba(24,6,52,.34) 24%, rgba(24,6,52,.34) 68%, rgba(24,6,52,.82) 100%);}
+  .account{margin:14px 0 0;padding:16px;border-radius:18px;background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid rgba(255,255,255,.16);box-shadow:0 14px 30px -16px rgba(20,4,50,.8), inset 0 1px 0 rgba(255,255,255,.22);}
+  .acc-top{display:flex;align-items:center;justify-content:space-between;}
+  .acc-lbl{font-family:"Baloo 2",cursive;font-weight:700;font-size:15px;}
+  .acc-val{font-family:"Baloo 2",cursive;font-weight:800;font-size:28px;color:var(--glow);}
+  .acc-sub{color:var(--sub);font-size:12.5px;margin:6px 0 0;}
+  .rewards{display:flex;flex-direction:column;gap:10px;padding-bottom:8px;}
+  .reward{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid var(--line);}
+  .reward .rw-i{flex:1;}
+  .reward .rw-t{font-family:"Baloo 2",cursive;font-weight:800;font-size:15px;}
+  .reward .rw-d{color:var(--sub);font-size:12px;margin-top:2px;}
+  .reward .rw-b{font-family:"Baloo 2",cursive;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--glow),var(--glow2));border:0;border-radius:12px;padding:11px 15px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.4);white-space:nowrap;}
+  .reward .rw-b:disabled{opacity:.4;filter:grayscale(.3);cursor:default;}
+  .rv-stars{color:rgba(255,255,255,.28);letter-spacing:1px;white-space:nowrap;}
+  .rv-stars .f{color:#ffd85a;}
+  .rv-stars.big{font-size:18px;}
+  .rv-c{color:var(--sub);font-size:12.5px;}
+  .drating{display:flex;align-items:center;gap:8px;font-size:15px;}
+  .dreviews{margin-top:12px;display:flex;flex-direction:column;gap:10px;}
+  .rvcard{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid var(--line);}
+  .rv-h{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .rv-h b{font-family:"Baloo 2",cursive;font-weight:700;font-size:14px;}
+  .rv-p{color:var(--glow);font-size:12px;margin-top:2px;font-weight:600;}
+  .rv-b{color:var(--sub);font-size:13.5px;margin-top:6px;}
+  .rvform{margin-top:22px;}
+  .starpick{display:flex;gap:6px;margin:0 0 10px;}
+  .starpick .sp{background:transparent;border:0;font-size:30px;line-height:1;color:rgba(255,255,255,.3);cursor:pointer;padding:0;}
+  .starpick .sp.on{color:#ffd85a;}
+  .rvform textarea{width:100%;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:#fff;font-family:"Fredoka",sans-serif;font-size:14px;padding:12px;resize:vertical;}
+  .rvform textarea::placeholder{color:rgba(230,204,255,.6);}
+  .rvbtn{margin-top:10px;width:100%;font-family:"Baloo 2",cursive;font-weight:800;font-size:15px;color:#fff;background:linear-gradient(180deg,var(--glow),var(--glow2));border:0;border-radius:12px;padding:14px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.4);}
+  .rvbtn:disabled{opacity:.6;}
+  .rvnote{color:var(--sub);font-size:12.5px;text-align:center;margin:8px 0 0;}
+  .avislist{display:flex;flex-direction:column;gap:12px;padding-bottom:24px;}
 </style>
 </head>
 <body>
@@ -193,6 +226,12 @@
     <div class="promo-ic">%</div>
     <div><b>Plus tu en prends, moins c'est cher.</b><br><span>Jusqu'à −20% dès 3 exemplaires du même tableau.</span></div>
   </div>
+  <div class="account">
+    <div class="acc-top"><span class="acc-lbl">Tes crédits</span><span class="acc-val" id="creditsVal">—</span></div>
+    <p class="acc-sub">1 crédit tous les 10 € dépensés — échange-les contre des cadeaux ci-dessous.</p>
+  </div>
+  <h2 class="home-h">Récompenses</h2>
+  <div id="rewards" class="rewards"></div>
   <h2 class="home-h">L'œuvre du moment</h2>
   <div id="featured"></div>
   <h2 class="home-h">Comment ça marche</h2>
@@ -247,13 +286,33 @@
     <p class="ddesc" id="dDesc"></p>
     <div class="tarif-label">Tarification</div>
     <div class="formats-grid" id="dFormats"></div>
+    <div class="tarif-label">Avis clients</div>
+    <div class="drating" id="dRating"></div>
+    <div class="dreviews" id="dReviews"></div>
+    <div class="rvform">
+      <div class="tarif-label">Laisser un avis</div>
+      <div class="starpick" id="starPick"></div>
+      <textarea id="reviewText" maxlength="500" rows="3" placeholder="Ton avis (facultatif)…"></textarea>
+      <button class="rvbtn" id="reviewSubmit">Publier mon avis</button>
+      <p class="rvnote" id="reviewNote"></p>
+    </div>
   </div>
   <div class="dcta"><button id="addToCartBtn">Ajouter au panier</button></div>
 </div>
 
+<section id="avis" class="view">
+  <header class="masthead">
+    <div class="kicker">Ils ont commandé</div>
+    <h1 class="wordmark">Avis clients</h1>
+    <p>Les retours vérifiés sur les œuvres.</p>
+  </header>
+  <div class="avislist" id="avisList"></div>
+</section>
+
 <nav class="tabs">
   <button data-tab="accueil" class="active"><span class="ic">&#8962;</span>Accueil</button>
   <button data-tab="boutique"><span class="ic">&#10022;</span>Boutique</button>
+  <button data-tab="avis"><span class="ic">&#9733;</span>Avis</button>
   <button data-act="cart"><span class="ic">&#128722;</span>Panier<span class="badge" id="badge"></span></button>
   <button data-tab="info"><span class="ic">&#9678;</span>Infos</button>
 </nav>
@@ -360,6 +419,7 @@ function openDetail(p) {
   setMainMedia(p.video ? "video" : "image");
   buildThumbs();
   renderFormats();
+  loadProductReviews(current.id); resetReviewForm();
   document.getElementById("dscrim").classList.add("show");
   document.getElementById("detail").classList.add("show");
 }
@@ -407,6 +467,7 @@ async function checkout(){
     const d=await r.json(); if (!r.ok) throw new Error(d.error||"Erreur");
     tg?.HapticFeedback?.notificationOccurred?.("success");
     cart.clear(); syncCart(); closeSheet();
+    if (typeof d.credits === "number"){ me.credits=d.credits; renderCredits(); }
     tg?.showPopup ? tg.showPopup({ title:"Commande envoyée", message:`Merci ! Je te confirme tout par message (total ${euro(d.total)}).`, buttons:[{type:"ok"}] }) : alert("Commande envoyée, merci !");
   } catch(e){
     tg?.HapticFeedback?.notificationOccurred?.("error");
@@ -421,7 +482,7 @@ function activateTab(name){
   const view=document.getElementById(name); if (view) view.classList.add("active"); window.scrollTo(0,0);
 }
 document.querySelectorAll("nav.tabs button").forEach(b=>{
-  b.onclick=()=>{ if (b.dataset.act==="cart"){ openSheet(); return; } activateTab(b.dataset.tab); };
+  b.onclick=()=>{ if (b.dataset.act==="cart"){ openSheet(); return; } activateTab(b.dataset.tab); if (b.dataset.tab==="avis") loadAvis(); };
 });
 function portalPop(el){
   el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop");
@@ -468,6 +529,70 @@ document.getElementById("dscrim").onclick=closeDetail;
 document.getElementById("scrim").onclick=closeSheet;
 document.getElementById("checkoutBtn").onclick=checkout;
 tg?.MainButton?.onClick?.(openSheet);
+// ── Compte / crédits / récompenses / avis ───────────────────
+const authH = () => ({ "Content-Type":"application/json", "X-Telegram-Init-Data": tg?.initData||"" });
+let me = { credits:0, db:false };
+let REWARDS = [];
+function renderCredits(){ const el=document.getElementById("creditsVal"); if(el) el.textContent = me.db ? me.credits : "—"; }
+async function loadMe(){ try{ const r=await fetch("/api/me",{headers:authH()}); if(r.ok){ me=await r.json(); renderCredits(); renderRewards(); } }catch(_){} }
+async function loadRewards(){ try{ const r=await fetch("/api/rewards"); if(r.ok){ REWARDS=await r.json(); renderRewards(); } }catch(_){} }
+function renderRewards(){
+  const box=document.getElementById("rewards"); if(!box) return; box.innerHTML="";
+  for(const rw of REWARDS){
+    const enough = me.db && me.credits>=rw.cost;
+    const el=document.createElement("div"); el.className="reward";
+    el.innerHTML=`<div class="rw-i"><div class="rw-t">${rw.title}</div><div class="rw-d">${rw.description||""}</div></div><button class="rw-b" ${enough?"":"disabled"}>${rw.cost} cr.</button>`;
+    el.querySelector(".rw-b").onclick=()=>redeem(rw);
+    box.appendChild(el);
+  }
+}
+async function redeem(rw){
+  if(!me.db){ (tg?.showAlert||alert)("Récompenses bientôt disponibles."); return; }
+  if(me.credits<rw.cost){ (tg?.showAlert||alert)("Crédits insuffisants."); return; }
+  try{
+    const r=await fetch("/api/redeem",{method:"POST",headers:authH(),body:JSON.stringify({reward_id:rw.id})});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||"Erreur");
+    me.credits=d.credits; renderCredits(); renderRewards(); tg?.HapticFeedback?.notificationOccurred?.("success");
+    (tg?.showPopup||(m=>alert(m.message)))({title:"Récompense demandée",message:`« ${rw.title} » enregistrée 🎁 En attente de validation.`,buttons:[{type:"ok"}]});
+  }catch(e){ (tg?.showAlert||alert)("Échec : "+e.message); }
+}
+function starsRow(n){ n=Math.round(n); let s=""; for(let i=1;i<=5;i++) s+=`<span class="${i<=n?"f":""}">★</span>`; return s; }
+async function loadAvis(){
+  const box=document.getElementById("avisList"); if(!box) return; box.innerHTML=`<p class="empty">Chargement…</p>`;
+  try{
+    const r=await fetch("/api/reviews"); const d=await r.json();
+    if(!d.reviews||!d.reviews.length){ box.innerHTML=`<p class="empty">Pas encore d'avis publié.</p>`; return; }
+    box.innerHTML="";
+    for(const rv of d.reviews){ const p=PRODUCTS.find(x=>x.id===rv.product_id); const el=document.createElement("div"); el.className="rvcard";
+      el.innerHTML=`<div class="rv-h"><b>${rv.user_name||"Client"}</b><span class="rv-stars">${starsRow(rv.rating)}</span></div><div class="rv-p">${p?p.title:""}</div>`+(rv.body?`<div class="rv-b">${rv.body}</div>`:""); box.appendChild(el); }
+  }catch(_){ box.innerHTML=`<p class="empty">Impossible de charger les avis.</p>`; }
+}
+let reviewRating=0;
+function renderStarPick(){ const el=document.getElementById("starPick"); if(!el) return; el.innerHTML=""; for(let i=1;i<=5;i++){ const b=document.createElement("button"); b.className="sp"+(i<=reviewRating?" on":""); b.textContent="★"; b.onclick=()=>{ reviewRating=i; renderStarPick(); }; el.appendChild(b);} }
+function resetReviewForm(){ reviewRating=0; renderStarPick(); const t=document.getElementById("reviewText"); if(t)t.value=""; const n=document.getElementById("reviewNote"); if(n)n.textContent=""; }
+async function loadProductReviews(pid){
+  const rt=document.getElementById("dRating"), rl=document.getElementById("dReviews"); if(rt)rt.innerHTML=""; if(rl)rl.innerHTML="";
+  try{
+    const r=await fetch("/api/reviews?product="+encodeURIComponent(pid)); const d=await r.json();
+    if(rt) rt.innerHTML = d.count ? `<span class="rv-stars big">${starsRow(d.average)}</span> <b>${d.average.toFixed(1)}</b> <span class="rv-c">(${d.count})</span>` : `<span class="rv-c">Aucun avis pour le moment.</span>`;
+    if(rl){ for(const rv of d.reviews){ const el=document.createElement("div"); el.className="rvcard"; el.innerHTML=`<div class="rv-h"><b>${rv.user_name||"Client"}</b><span class="rv-stars">${starsRow(rv.rating)}</span></div>`+(rv.body?`<div class="rv-b">${rv.body}</div>`:""); rl.appendChild(el);} }
+  }catch(_){}
+}
+async function submitReview(){
+  if(!current) return;
+  if(!reviewRating){ (tg?.showAlert||alert)("Choisis une note (1 à 5 étoiles)."); return; }
+  const note=document.getElementById("reviewNote"), btn=document.getElementById("reviewSubmit");
+  btn.disabled=true; btn.textContent="Envoi…";
+  try{
+    const r=await fetch("/api/reviews",{method:"POST",headers:authH(),body:JSON.stringify({product_id:current.id,rating:reviewRating,body:document.getElementById("reviewText").value})});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||"Erreur");
+    tg?.HapticFeedback?.notificationOccurred?.("success"); note.textContent="Merci ! Ton avis sera publié après validation."; resetReviewForm();
+  }catch(e){ note.textContent="Échec : "+e.message; }
+  btn.disabled=false; btn.textContent="Publier mon avis";
+}
+document.getElementById("reviewSubmit").onclick=submitReview;
+renderStarPick(); loadMe(); loadRewards();
+
 (function(){ var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches; var intro=document.getElementById("intro"); if(!intro) return; if(reduce){ intro.style.display="none"; return; } setTimeout(function(){ intro.style.display="none"; }, 2100); })();
 </script>
 </body>
