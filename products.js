@@ -1,8 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-//  CATALOGUE DES TABLEAUX  —  source de vérité (côté serveur)
-//  Les prix sont recalculés ici (paliers dégressifs). Édite ce
-//  tableau, dépose images (.jpg) et vidéos (.mp4) dans
-//  public/tableaux/, redéploie.
+//  CATALOGUE + RÉCOMPENSES  —  source de vérité (côté serveur)
 // ─────────────────────────────────────────────────────────────
 
 const PRODUCTS = [
@@ -20,18 +17,29 @@ const PRODUCTS = [
     description:"Édition limitée à 20. Fichier haute définition livré après paiement.", price:120 },
 ];
 
-// Quantités proposées à l'achat (les « formats »).
+// Quantités proposées (formats)
 const FORMAT_QTYS = [1, 2, 3, 5];
 
-// Paliers de prix DÉGRESSIFS (par exemplaire du MÊME tableau).
+// Paliers de prix dégressifs (par exemplaire du même tableau)
 const PRICE_TIERS = [
-  { min: 3, discount: 0.20 }, // 3 et + : −20% / exemplaire
-  { min: 2, discount: 0.10 }, // 2      : −10% / exemplaire
+  { min: 3, discount: 0.20 },
+  { min: 2, discount: 0.10 },
 ];
-function unitPrice(base, qty) {
-  const t = PRICE_TIERS.find(t => qty >= t.min);
-  return Math.round(base * (1 - (t ? t.discount : 0)));
-}
+function unitPrice(base, qty) { const t = PRICE_TIERS.find(t => qty >= t.min); return Math.round(base * (1 - (t ? t.discount : 0))); }
 function lineTotal(base, qty) { return unitPrice(base, qty) * qty; }
 
-module.exports = { PRODUCTS, FORMAT_QTYS, PRICE_TIERS, unitPrice, lineTotal };
+// ── Fidélité : crédits gagnés par commande ──────────────────
+// 1 crédit tous les 10 € dépensés (modifiable).
+const CREDITS_PER_EURO = 0.1;
+function creditsFor(total) { return Math.floor(total * CREDITS_PER_EURO); }
+
+// ── Récompenses échangeables contre des crédits ─────────────
+// Édite librement (id unique, titre, coût en crédits, description).
+const REWARDS = [
+  { id:"sticker",  title:"Pack de stickers",      cost:30,  description:"Set de stickers de l'atelier DR RS." },
+  { id:"tirage",   title:"Tirage A5 signé",       cost:50,  description:"Un petit tirage offert, signé à la main." },
+  { id:"remise10", title:"−10 % prochaine œuvre",  cost:80,  description:"Code promo sur ta prochaine commande." },
+  { id:"minitoile",title:"Mini toile surprise",   cost:150, description:"Une mini pièce originale, choisie par l'artiste." },
+];
+
+module.exports = { PRODUCTS, FORMAT_QTYS, PRICE_TIERS, unitPrice, lineTotal, CREDITS_PER_EURO, creditsFor, REWARDS };
