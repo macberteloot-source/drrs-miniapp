@@ -7,7 +7,10 @@ const PRODUCTS = [
   { id:"aurore",  title:"Forbidden Fruit🔞🍓🧊", subtitle:"Haram Boys👨‍🌾🏆 FROZEN🧊 · pièce signée", emoji:"🔥",
     image:"/tableaux/aurore.jpg",  video:"/tableaux/aurore.mp4",  accent:"#7c3aed", stock:20,
     gallery:["/tableaux/aurore-2.jpg","/tableaux/aurore-3.jpg","/tableaux/aurore-4.jpg","/tableaux/aurore-5.jpg"],  
-    description:"Édition de 20 exemplaires signés et numérotés. Encadrement inclus, expédition sous 5 jours.", price:450 },
+    description:"Haram Boys,👨‍🌾😈 c’est clairement ! la crème de la crème👌🤤 des hashmakers🧤en Europe,🇪🇺 une farm de génies👨‍🔬 qui a troqué le tamis à l'ancienne🌿⛰️ pour les températures polaires❄️ afin de sortir🙌 un frozen🧊 hash qui est, disons-le franchement,🤷‍♂️ une pure frappe atomique.😮‍💨🔞 Leur technique d'extraction glaciale🥶 permet de capturer tous les terpènes💦 et le THC🧪 au summum💹 de leur puissance,🥵💢 ce qui te donne un produit ultra-propre,✨ ultra-goûtu🤤 et collant à souhait,👌🏼à tel point que même s'ils s'appellent ironiquement😉 les "Haram Boys",😈 leur travail sur la qualité🌟 est presque une œuvre pieuse🙏🛐 pour les amateurs de grosses saveurs😶‍🌫️🤯
+
+ 🌿Excellent Bowl Topper🌿
+            TRUC2OUF😱🌟", price:450 },
   { id:"silence", title:"Silence Urbain",   subtitle:"Techniques mixtes · originale", emoji:"",
     image:"/tableaux/silence.jpg", video:"/tableaux/silence.mp4", accent:"#5b21b6", stock:20,
     description:"Édition de 20 exemplaires. Toile montée sur châssis, prête à accrocher.", price:320 },
