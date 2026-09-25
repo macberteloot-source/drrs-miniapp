@@ -152,8 +152,7 @@
   .ripple{position:absolute;left:50%;top:44%;width:22px;height:22px;margin:-11px;border-radius:50%;background:radial-gradient(circle, rgba(255,120,235,.95), rgba(210,76,240,.5) 40%, transparent 72%);transform:scale(0);animation:ripple .5s ease-out forwards;pointer-events:none;z-index:3;}
   @keyframes ripple{to{transform:scale(16);opacity:0;}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
-  #marble{position:fixed;inset:0;z-index:-3;pointer-events:none;background:#170535;}
-  #marble svg{width:100%;height:100%;display:block;}
+  .bg-img{position:fixed;inset:0;z-index:-3;pointer-events:none;background:url('/bg.jpg') center/cover no-repeat;background-color:#150430;}
   .veil{position:fixed;inset:0;z-index:-2;pointer-events:none;background:linear-gradient(180deg, rgba(24,6,52,.74) 0%, rgba(24,6,52,.34) 24%, rgba(24,6,52,.34) 68%, rgba(24,6,52,.82) 100%);}
   .account{margin:14px 0 0;padding:16px;border-radius:18px;background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid rgba(255,255,255,.16);box-shadow:0 14px 30px -16px rgba(20,4,50,.8), inset 0 1px 0 rgba(255,255,255,.22);}
   .acc-top{display:flex;align-items:center;justify-content:space-between;}
@@ -188,30 +187,28 @@
   .rvbtn:disabled{opacity:.6;}
   .rvnote{color:var(--sub);font-size:12.5px;text-align:center;margin:8px 0 0;}
   .avislist{display:flex;flex-direction:column;gap:12px;padding-bottom:24px;}
+  .fid-h{font-family:"Baloo 2",system-ui,cursive;font-weight:800;font-size:20px;margin:28px 0 10px;}
+  .fid-line{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;padding:4px 0 2px;}
+  .fid-line b{font-family:"Baloo 2",system-ui,cursive;font-weight:800;font-size:22px;color:var(--glow);}
+  .rewards{display:flex;flex-direction:column;gap:0;margin-top:10px;padding-bottom:8px;}
+  .reward{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--line);background:none;border-radius:0;box-shadow:none;}
+  .reward:last-child{border-bottom:1px solid var(--line);}
+  .reward .rw-t{font-family:"Fredoka",sans-serif;font-weight:600;font-size:15px;}
+  .reward .rw-d{color:var(--sub);font-size:12px;margin-top:2px;}
+  .reward .rw-b{font-family:"Fredoka",sans-serif;font-weight:700;font-size:13px;color:#fff;background:transparent;border:1px solid var(--glow);border-radius:999px;padding:7px 14px;cursor:pointer;box-shadow:none;white-space:nowrap;}
+  .reward .rw-b:disabled{opacity:.45;border-color:var(--line);color:var(--sub);}
+  #intro{background:radial-gradient(circle at 50% 34%, #3a0d6e, #150430 72%) !important;}
+  .intro-in{display:flex;flex-direction:column;align-items:center;gap:16px;animation:introPop 1.6s cubic-bezier(.2,.85,.2,1) forwards;}
+  .intro-logo{width:min(72vw,300px);filter:drop-shadow(0 12px 34px rgba(255,90,224,.6));}
+  .intro-since{font-family:"Baloo 2",system-ui,cursive;font-weight:800;font-size:16px;letter-spacing:.03em;color:#fff;text-shadow:0 2px 0 rgba(20,4,45,.5);opacity:0;animation:introSince .5s ease .55s forwards;}
+  @keyframes introPop{0%{transform:scale(.55);opacity:0;}28%{opacity:1;}55%{transform:scale(1.05);}72%{transform:scale(1);}100%{transform:scale(1);opacity:1;}}
+  @keyframes introSince{to{opacity:1;}}
 </style>
 </head>
 <body>
-<div id="intro"><div class="gate"><div class="glow"></div><div class="ring"></div><div class="core"></div></div></div>
+<div id="intro"><div class="intro-in"><img class="intro-logo" src="/logo.png" alt="DR RS" /><div class="intro-since">—— Since 2020 🏆 ——</div></div></div>
 <div class="cosmos"></div>
-<div id="marble" aria-hidden="true">
-<svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="band" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#170535"/><stop offset="0.30" stop-color="#5a189f"/>
-      <stop offset="0.50" stop-color="#e04bd6"/><stop offset="0.68" stop-color="#7127c4"/><stop offset="1" stop-color="#170535"/>
-    </linearGradient>
-    <pattern id="stripes" width="130" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(34)">
-      <rect width="130" height="12" fill="url(#band)"/>
-    </pattern>
-    <filter id="marbleF" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
-      <feTurbulence type="turbulence" baseFrequency="0.004 0.009" numOctaves="4" seed="9" result="t"/>
-      <feDisplacementMap in="SourceGraphic" in2="t" scale="210" xChannelSelector="R" yChannelSelector="G" result="d"/>
-      <feGaussianBlur in="d" stdDeviation="1.1"/>
-    </filter>
-  </defs>
-  <rect x="-120" y="-120" width="640" height="1040" fill="url(#stripes)" filter="url(#marbleF)"/>
-</svg>
-</div>
+<div class="bg-img"></div>
 <div class="veil"></div>
 <div class="halftone"></div>
 <div id="stars"></div>
@@ -226,12 +223,6 @@
     <div class="promo-ic">%</div>
     <div><b>Plus tu en prends, moins c'est cher.</b><br><span>Jusqu'à −20% dès 3 exemplaires du même tableau.</span></div>
   </div>
-  <div class="account">
-    <div class="acc-top"><span class="acc-lbl">Tes crédits</span><span class="acc-val" id="creditsVal">—</span></div>
-    <p class="acc-sub">1 crédit tous les 10 € dépensés — échange-les contre des cadeaux ci-dessous.</p>
-  </div>
-  <h2 class="home-h">Récompenses</h2>
-  <div id="rewards" class="rewards"></div>
   <h2 class="home-h">L'œuvre du moment</h2>
   <div id="featured"></div>
   <h2 class="home-h">Comment ça marche</h2>
@@ -265,6 +256,10 @@
     <div class="row-link" id="contact"><span>Me contacter</span><span class="chev">&#8250;</span></div>
     <div class="row-link" id="shipping"><span>Livraison &amp; retours</span><span class="chev">&#8250;</span></div>
     <div class="row-link" id="commissions"><span>Commande sur mesure</span><span class="chev">&#8250;</span></div>
+    <h2 class="fid-h">Fidélité</h2>
+    <div class="fid-line">Tes crédits<b id="creditsVal">—</b></div>
+    <p class="muted">1 crédit tous les 10 € dépensés. Échange-les contre un cadeau :</p>
+    <div id="rewards" class="rewards"></div>
     <button class="install" id="installBtn">Ajouter à l'écran d'accueil</button>
     <p class="note" id="installNote"></p>
   </div>
@@ -532,10 +527,16 @@ tg?.MainButton?.onClick?.(openSheet);
 // ── Compte / crédits / récompenses / avis ───────────────────
 const authH = () => ({ "Content-Type":"application/json", "X-Telegram-Init-Data": tg?.initData||"" });
 let me = { credits:0, db:false };
-let REWARDS = [];
+const REWARDS_FALLBACK = [
+  { id:"sticker", title:"Pack de stickers", cost:30, description:"Set de stickers de l'atelier DR RS." },
+  { id:"tirage", title:"Tirage A5 signé", cost:50, description:"Un petit tirage offert, signé à la main." },
+  { id:"remise10", title:"−10 % prochaine œuvre", cost:80, description:"Code promo sur ta prochaine commande." },
+  { id:"minitoile", title:"Mini toile surprise", cost:150, description:"Une mini pièce originale, choisie par l'artiste." },
+];
+let REWARDS = REWARDS_FALLBACK;
 function renderCredits(){ const el=document.getElementById("creditsVal"); if(el) el.textContent = me.db ? me.credits : "—"; }
 async function loadMe(){ try{ const r=await fetch("/api/me",{headers:authH()}); if(r.ok){ me=await r.json(); renderCredits(); renderRewards(); } }catch(_){} }
-async function loadRewards(){ try{ const r=await fetch("/api/rewards"); if(r.ok){ REWARDS=await r.json(); renderRewards(); } }catch(_){} }
+async function loadRewards(){ try{ const r=await fetch("/api/rewards"); if(r.ok){ const d=await r.json(); if(Array.isArray(d)&&d.length) REWARDS=d; } }catch(_){} renderRewards(); }
 function renderRewards(){
   const box=document.getElementById("rewards"); if(!box) return; box.innerHTML="";
   for(const rw of REWARDS){
