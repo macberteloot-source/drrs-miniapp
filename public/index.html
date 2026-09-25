@@ -223,7 +223,7 @@
     <div class="promo-ic">%</div>
     <div><b>Plus tu en prends, moins c'est cher.</b><br><span>Jusqu'à −20% dès 3 exemplaires du même tableau.</span></div>
   </div>
-  <h2 class="home-h">Best Seller</h2>
+  <h2 class="home-h">L'œuvre du moment</h2>
   <div id="featured"></div>
   <h2 class="home-h">Comment ça marche</h2>
   <div class="steps">
@@ -329,7 +329,7 @@ const unitPrice = (base, qty) => { const t = PRICE_TIERS.find(t => qty >= t.min)
 const lineTotal = (base, qty) => unitPrice(base, qty) * qty;
 
 const FALLBACK = [
-  { id:"aurore",  title:"Forbidden Fruit🔞🍓🧊", subtitle:"Haram Boys👨‍🌾🏆 FROZEN🧊", emoji:"🔥", image:"/tableaux/aurore.jpg",  video:"/tableaux/aurore.mp4",  accent:"#7c3aed", stock:20, description:"Édition de 20 exemplaires signés et numérotés.", price:450 },
+  { id:"aurore",  title:"Aurore Fracturée", subtitle:"Acrylique · pièce signée", emoji:"🔥", image:"/tableaux/aurore.jpg",  video:"/tableaux/aurore.mp4",  accent:"#7c3aed", stock:20, description:"Édition de 20 exemplaires signés et numérotés.", price:450 },
   { id:"silence", title:"Silence Urbain",   subtitle:"Techniques mixtes · originale", emoji:"", image:"/tableaux/silence.jpg", video:"/tableaux/silence.mp4", accent:"#5b21b6", stock:20, description:"Édition de 20 exemplaires. Prête à accrocher.", price:320 },
   { id:"derive",  title:"Dérive",           subtitle:"Encre & gouache · sur papier", emoji:"", image:"/tableaux/derive.jpg",  video:"/tableaux/derive.mp4",  accent:"#0ea5a0", stock:20, description:"Édition de 20 exemplaires signés.", price:280 },
   { id:"memoire", title:"Mémoire Vive",     subtitle:"Édition giclée · numérotée", emoji:"✦", image:"/tableaux/memoire.jpg", video:"/tableaux/memoire.mp4", accent:"#a855f7", stock:20, description:"Édition limitée à 20. Fichier HD après paiement.", price:120 },
@@ -339,7 +339,7 @@ const tg = window.Telegram?.WebApp;
 const euro = (n) => n.toLocaleString("fr-FR") + " €";
 let PRODUCTS = FALLBACK;
 const cart = new Map();
-let current = null, selectedQty = 1;
+let current = null, selectedQty = 1, mediaItems = [], mediaIdx = 0;
 const CONTACT_USERNAME = "ton_username";     // ← ton @ Telegram
 const SHOP_LINK = "https://t.me/drrs59_bot"; // ← lien de ton bot (partage)
 
@@ -381,24 +381,35 @@ function renderGrid() {
 }
 
 // ── Fiche produit ───────────────────────────────────────
-function setMainMedia(type) {
+function buildMediaItems(p){
+  const items=[];
+  if(p.video) items.push({type:"video", src:p.video, poster:p.image||""});
+  if(p.image) items.push({type:"image", src:p.image});
+  (p.gallery||[]).forEach(g=>{ if(g) items.push({type:"image", src:g}); });
+  return items;
+}
+function showMedia(i){
+  mediaIdx=i; const it=mediaItems[i];
   const vid=document.getElementById("dVideo"), img=document.getElementById("dImg"), fb=document.getElementById("dFallback");
   vid.style.display="none"; img.style.display="none"; fb.style.display="none";
-  if (type==="video" && current.video) {
-    vid.src=current.video; if (current.image) vid.poster=current.image; vid.style.display="block";
-    vid.onerror=()=>setMainMedia("image"); const pl=vid.play?.(); if (pl?.catch) pl.catch(()=>{});
-  } else if (current.image) {
-    try{vid.pause();}catch(_){} img.src=current.image; img.style.display="block"; img.onerror=()=>{ img.style.display="none"; fb.style.display="block"; };
-  } else fb.style.display="block";
+  if(!it){ fb.style.display="block"; }
+  else if(it.type==="video"){
+    vid.src=it.src; if(it.poster) vid.poster=it.poster; vid.style.display="block";
+    vid.onerror=()=>{ vid.style.display="none"; fb.style.display="block"; }; const pl=vid.play?.(); if(pl?.catch) pl.catch(()=>{});
+  } else {
+    try{vid.pause();}catch(_){} img.src=it.src; img.style.display="block"; img.onerror=()=>{ img.style.display="none"; fb.style.display="block"; };
+  }
+  document.querySelectorAll("#dThumbs .thumb").forEach((t,k)=>t.classList.toggle("sel", k===i));
 }
 function buildThumbs() {
   const box=document.getElementById("dThumbs"); box.innerHTML="";
-  const items=[]; if (current.video) items.push({type:"video"}); if (current.image) items.push({type:"image"});
-  if (items.length<2) { box.style.display="none"; return; } box.style.display="flex";
-  items.forEach((it,i)=>{
-    const t=document.createElement("button"); t.className="thumb"+((it.type==="video"&&current.video)||(i===0)?" sel":"");
-    t.innerHTML = `<img src="${current.image||''}" alt="" onerror="this.style.opacity=0" />${it.type==="video"?'<span class="play">&#9658;</span>':''}`;
-    t.onclick=()=>{ box.querySelectorAll(".thumb").forEach(x=>x.classList.remove("sel")); t.classList.add("sel"); setMainMedia(it.type); };
+  if(mediaItems.length<2){ box.style.display="none"; return; }
+  box.style.display="flex";
+  mediaItems.forEach((it,i)=>{
+    const t=document.createElement("button"); t.className="thumb"+(i===0?" sel":"");
+    const src = it.type==="video" ? (it.poster||"") : it.src;
+    t.innerHTML=`<img src="${src}" alt="" onerror="this.style.opacity=0" />${it.type==="video"?'<span class="play">&#9658;</span>':''}`;
+    t.onclick=()=>showMedia(i);
     box.appendChild(t);
   });
 }
@@ -411,8 +422,8 @@ function openDetail(p) {
   document.getElementById("dCap").textContent=p.title;
   document.getElementById("dSub").textContent=p.subtitle||"";
   document.getElementById("dDesc").textContent=p.description||"";
-  setMainMedia(p.video ? "video" : "image");
-  buildThumbs();
+  mediaItems=buildMediaItems(p);
+  buildThumbs(); showMedia(0);
   renderFormats();
   loadProductReviews(current.id); resetReviewForm();
   document.getElementById("dscrim").classList.add("show");
