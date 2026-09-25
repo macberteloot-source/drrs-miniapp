@@ -1,10 +1,12 @@
 // ─────────────────────────────────────────────────────────────
 //  CATALOGUE + RÉCOMPENSES  —  source de vérité (côté serveur)
+//  Plusieurs photos par tableau : ajoute-les dans "gallery" (voir aurore).
 // ─────────────────────────────────────────────────────────────
 
 const PRODUCTS = [
   { id:"aurore",  title:"Aurore Fracturée", subtitle:"Acrylique · pièce signée", emoji:"🔥",
     image:"/tableaux/aurore.jpg",  video:"/tableaux/aurore.mp4",  accent:"#7c3aed", stock:20,
+    gallery:[],  // photos en plus : ["/tableaux/aurore-2.jpg","/tableaux/aurore-3.jpg"]
     description:"Édition de 20 exemplaires signés et numérotés. Encadrement inclus, expédition sous 5 jours.", price:450 },
   { id:"silence", title:"Silence Urbain",   subtitle:"Techniques mixtes · originale", emoji:"",
     image:"/tableaux/silence.jpg", video:"/tableaux/silence.mp4", accent:"#5b21b6", stock:20,
